@@ -612,7 +612,7 @@ public class DTCDatabase extends SQLiteOpenHelper {
         @Override
         public String toString() {
             StringBuilder sb = new StringBuilder();
-            sb.append(code).append(" - ").append(description);
+            sb.append(code).append(" - ").append(description).append(severity != null ? " [Severity: " + severity + "]" : "");
             if (!isGeneric()) {
                 sb.append(" [").append(manufacturer.toUpperCase()).append("]");
             }
