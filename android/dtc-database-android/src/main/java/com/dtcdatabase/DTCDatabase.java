@@ -48,7 +48,7 @@ import java.util.Map;
  */
 public class DTCDatabase extends SQLiteOpenHelper {
     private static final String DATABASE_NAME = "dtc_codes.db";
-    private static final int DATABASE_VERSION = 1;
+    private static final int DATABASE_VERSION = 2;
     private static final String TABLE_NAME = "dtc_definitions";
 
     // Column names
@@ -58,6 +58,7 @@ public class DTCDatabase extends SQLiteOpenHelper {
     private static final String COL_MANUFACTURER = "manufacturer";
     private static final String COL_LOCALE = "locale";
     private static final String COL_IS_GENERIC = "is_generic";
+    private static final String COL_SEVERITY = "severity";
 
     private Context context;
     private static DTCDatabase instance;
@@ -251,6 +252,7 @@ public class DTCDatabase extends SQLiteOpenHelper {
             if (cursor.moveToFirst()) {
                 dtc = new DTC(
                     cursor.getString(cursor.getColumnIndexOrThrow(COL_CODE)),
+                    cursor.getString(cursor.getColumnIndexOrThrow(COL_SEVERITY)),
                     cursor.getString(cursor.getColumnIndexOrThrow(COL_DESCRIPTION)),
                     cursor.getString(cursor.getColumnIndexOrThrow(COL_TYPE)),
                     cursor.getString(cursor.getColumnIndexOrThrow(COL_MANUFACTURER))
@@ -268,6 +270,7 @@ public class DTCDatabase extends SQLiteOpenHelper {
             if (cursor.moveToFirst()) {
                 dtc = new DTC(
                     cursor.getString(cursor.getColumnIndexOrThrow(COL_CODE)),
+                    cursor.getString(cursor.getColumnIndexOrThrow(COL_SEVERITY)),
                     cursor.getString(cursor.getColumnIndexOrThrow(COL_DESCRIPTION)),
                     cursor.getString(cursor.getColumnIndexOrThrow(COL_TYPE)),
                     cursor.getString(cursor.getColumnIndexOrThrow(COL_MANUFACTURER))
@@ -337,6 +340,7 @@ public class DTCDatabase extends SQLiteOpenHelper {
         while (cursor.moveToNext()) {
             results.add(new DTC(
                 cursor.getString(cursor.getColumnIndexOrThrow(COL_CODE)),
+                cursor.getString(cursor.getColumnIndexOrThrow(COL_SEVERITY)),
                 cursor.getString(cursor.getColumnIndexOrThrow(COL_DESCRIPTION)),
                 cursor.getString(cursor.getColumnIndexOrThrow(COL_TYPE)),
                 cursor.getString(cursor.getColumnIndexOrThrow(COL_MANUFACTURER))
@@ -376,6 +380,7 @@ public class DTCDatabase extends SQLiteOpenHelper {
         while (cursor.moveToNext()) {
             results.add(new DTC(
                 cursor.getString(cursor.getColumnIndexOrThrow(COL_CODE)),
+                cursor.getString(cursor.getColumnIndexOrThrow(COL_SEVERITY)),
                 cursor.getString(cursor.getColumnIndexOrThrow(COL_DESCRIPTION)),
                 cursor.getString(cursor.getColumnIndexOrThrow(COL_TYPE)),
                 cursor.getString(cursor.getColumnIndexOrThrow(COL_MANUFACTURER))
@@ -419,6 +424,7 @@ public class DTCDatabase extends SQLiteOpenHelper {
         while (cursor.moveToNext()) {
             results.add(new DTC(
                 cursor.getString(cursor.getColumnIndexOrThrow(COL_CODE)),
+                cursor.getString(cursor.getColumnIndexOrThrow(COL_SEVERITY)),
                 cursor.getString(cursor.getColumnIndexOrThrow(COL_DESCRIPTION)),
                 cursor.getString(cursor.getColumnIndexOrThrow(COL_TYPE)),
                 cursor.getString(cursor.getColumnIndexOrThrow(COL_MANUFACTURER))
@@ -554,12 +560,14 @@ public class DTCDatabase extends SQLiteOpenHelper {
      */
     public static class DTC {
         public final String code;
+        public final String severity;
         public final String description;
         public final String type;
         public final String manufacturer;
 
-        public DTC(String code, String description, String type, String manufacturer) {
+        public DTC(String code, String severity, String description, String type, String manufacturer) {
             this.code = code;
+            this.severity = severity;
             this.description = description;
             this.type = type;
             this.manufacturer = manufacturer;
@@ -579,6 +587,10 @@ public class DTCDatabase extends SQLiteOpenHelper {
                 case 'U': return "Network";
                 default: return "Unknown";
             }
+        }
+
+        public String getSeverity() {
+            return severity;
         }
 
         /**

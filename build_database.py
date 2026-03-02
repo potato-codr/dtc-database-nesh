@@ -27,6 +27,7 @@ def build_database():
     cursor.execute('''
         CREATE TABLE dtc_definitions (
             code TEXT NOT NULL,
+            severity TEXT NOT NULL,
             manufacturer TEXT NOT NULL,
             description TEXT NOT NULL,
             type TEXT NOT NULL,
@@ -93,6 +94,12 @@ def build_database():
                         code = parts[0].strip().upper()
                         desc = parts[1].strip()
 
+                        severity = "low"
+                        if code.startswith("P0"):
+                            severity = "critical"
+                        elif code.startswith("P1"):
+                            severity = "warning"
+
                         # Skip obvious data errors
                         if len(code) == 5 and code[0] in 'PBCU':
                             # Extract code type (P, B, C, or U)
@@ -102,9 +109,9 @@ def build_database():
                             try:
                                 cursor.execute('''
                                     INSERT INTO dtc_definitions
-                                    (code, manufacturer, description, type, locale, is_generic, source_file)
-                                    VALUES (?, ?, ?, ?, 'en', ?, ?)
-                                ''', (code, manufacturer, desc, code_type, is_generic, file_name))
+                                    (code, severity, manufacturer, description, type, locale, is_generic, source_file)
+                                    VALUES (?, ?, ?, ?, ?, 'en', ?, ?)
+                                ''', (code, severity, manufacturer, desc, code_type, is_generic, file_name))
 
                                 total_entries += 1
 

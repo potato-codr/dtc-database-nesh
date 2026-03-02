@@ -22,6 +22,7 @@ def test_database_schema():
 
     expected_columns = {
         'code': 'TEXT',
+        'severity': 'TEXT',
         'manufacturer': 'TEXT',
         'description': 'TEXT',
         'type': 'TEXT',
